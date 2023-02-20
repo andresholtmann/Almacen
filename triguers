@@ -1,0 +1,36 @@
+DROP TRIGGER restaprod ;
+CREATE TRIGGER restaprod 
+AFTER DELETE ON mov_alma
+FOR EACH ROW
+UPDATE prod_alma a
+   SET a.act_pro = ( a.act_pro - OLD.cant_mov )
+WHERE a.id_pro = OLD.prod_mov;
+
+
+DROP TRIGGER IF EXISTS restaprod;
+CREATE TRIGGER `restaprod` AFTER DELETE ON `mov_alma` FOR EACH ROW UPDATE prod_alma a
+   SET a.act_pro = ( a.act_pro - OLD.cant_mov )
+WHERE a.id_pro = OLD.prod_mov  and OLD.tip_mov = `ING`
+
+
+DROP TRIGGER IF EXISTS sumaprod;
+CREATE TRIGGER `sumaprod` AFTER INSERT ON `mov_alma` FOR EACH ROW UPDATE prod_alma a
+   SET a.act_pro = ( a.act_pro + NEW.cant_mov )
+WHERE a.id_pro = NEW.prod_mov and NEW.tip_mov = `ING`
+
+
+
+
+DROP TRIGGER IF EXISTS regreres;
+CREATE TRIGGER `restaprod` AFTER DELETE ON `mov_alma` FOR EACH ROW UPDATE prod_alma a
+   SET a.act_pro = ( a.act_pro + OLD.cant_mov )
+WHERE a.id_pro = OLD.prod_mov  and OLD.tip_mov = `EGR`
+
+
+DROP TRIGGER IF EXISTS entreres;
+CREATE TRIGGER `entreres` AFTER INSERT ON `mov_alma` FOR EACH ROW UPDATE prod_alma a
+   SET a.act_pro = ( a.act_pro - NEW.cant_mov )
+WHERE a.id_pro = NEW.prod_mov and NEW.tip_mov = `EGR`
+ 
+
+
